@@ -1,4 +1,4 @@
 export interface Character {
   name: string
-  initiativeValue: number
+  initiativeRoll: number
 }

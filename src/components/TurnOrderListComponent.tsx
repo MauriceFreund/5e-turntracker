@@ -11,7 +11,7 @@ export default function TurnTrackerMainComponent(props: TurnTrackerMainComponent
   const {characters} = props
   
   const characterList = useMemo(() => {
-    return <ul className="py-4 px-2 flex flex-col gap-1">
+    return <ul className="flex flex-col gap-2">
       {characters.map((character) => {
         return <li><CharacterCardComponent character={character}/></li>
       })}
@@ -19,7 +19,7 @@ export default function TurnTrackerMainComponent(props: TurnTrackerMainComponent
   }, [characters])
 
   return (
-    <div className="w-full bg-green-300">{characterList}</div>
+    <div className="w-full">{characterList}</div>
   )
 
 }

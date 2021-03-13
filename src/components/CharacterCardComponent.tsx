@@ -18,8 +18,8 @@ export default function CharacterCardComponent(props: CharacterCardComponentProp
           <span>{character.name}</span>
         </div>
         <div className="flex justify-between">
-          <span className="font-bold">InitiativeRoll: </span>
-          <span>{character.initiativeValue}</span>
+          <span className="font-bold">Initiative roll: </span>
+          <span>{character.initiativeRoll}</span>
         </div>
       </div>
     </div>

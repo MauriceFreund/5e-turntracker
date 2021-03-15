@@ -11,23 +11,21 @@ interface TurnTrackerMainComponentProps {
 export default function TurnTrackerMainComponent(props: TurnTrackerMainComponentProps) {
   const { characters, isListEditable, onCharacterUpdate } = props
 
-  const characterList = useMemo(() => {
-    return (
-      <ul className="flex flex-col gap-2">
-        {characters.map((character, index) => {
-          return (
-            <li key={index}>
-              <CharacterCardComponent
-                character={character}
-                isEditable={isListEditable}
-                onCharacterUpdate={(char) => onCharacterUpdate(index, char)}
-              />
-            </li>
-          )
-        })}
-      </ul>
-    )
-  }, [characters, isListEditable])
+  const characterList = (
+    <ul className="flex flex-col gap-2">
+      {characters.map((character, index) => {
+        return (
+          <li key={index}>
+            <CharacterCardComponent
+              character={character}
+              isEditable={isListEditable}
+              onCharacterUpdate={(char) => onCharacterUpdate(index, char)}
+            />
+          </li>
+        )
+      })}
+    </ul>
+  )
 
   return <div className="w-full">{characterList}</div>
 }

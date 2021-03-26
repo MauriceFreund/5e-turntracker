@@ -4,28 +4,23 @@ import CharacterCardComponent from './CharacterCardComponent'
 
 interface TurnTrackerMainComponentProps {
   characters: Character[]
-  isListEditable: boolean
-  onCharacterUpdate(index: number, updatedCharacter: Character): void
+  onCharacterDelete(index: number): void
 }
 
 export default function TurnTrackerMainComponent(props: TurnTrackerMainComponentProps) {
-  const { characters, isListEditable, onCharacterUpdate } = props
+  const { characters, onCharacterDelete } = props
 
   const characterList = (
     <ul className="flex flex-col gap-2">
       {characters.map((character, index) => {
         return (
           <li key={index}>
-            <CharacterCardComponent
-              character={character}
-              isEditable={isListEditable}
-              onCharacterUpdate={(char) => onCharacterUpdate(index, char)}
-            />
+            <CharacterCardComponent character={character} onDelete={() => onCharacterDelete(index)} />
           </li>
         )
       })}
     </ul>
   )
 
-  return <div className="w-full">{characterList}</div>
+  return <div className="w-full h-full overflow-y-auto">{characterList}</div>
 }

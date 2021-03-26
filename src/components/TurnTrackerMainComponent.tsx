@@ -1,24 +1,25 @@
 import React, { useState } from 'react'
 
 import { Character } from '../model/character'
-import CharacterCreationButton from './CharacterCreationButton'
 import TrackerControlComponent from './TrackerControlComponent'
 import TurnOrderListComponent from './TurnOrderListComponent'
 
 export default function TurnTrackerMainComponent() {
-  const initialCharacters: Character[] = [
-    { name: 'Triborya', initiativeRoll: 7, isCharacterActive: true },
-    { name: 'Herk', initiativeRoll: 14, isCharacterActive: false },
-    { name: 'Lucas', initiativeRoll: 1, isCharacterActive: false },
-  ]
-
   const [characters, setCharacters] = useState<Character[]>([])
-  const [isListEditable, setIsListEditable] = useState(false)
 
-  function pushNewCharacter() {
-    const isNewCharacterActive = characters.length === 0
-    const newCharacter = { name: 'Charactername', initiativeRoll: 10, isCharacterActive: isNewCharacterActive }
-    setCharacters([...characters, newCharacter])
+  function sortCharacterList(list: Character[]): Character[] {
+    const sortedCharacterList = [...list]
+    sortedCharacterList.sort((charA, charB) => charB.initiativeRoll - charA.initiativeRoll)
+    return sortedCharacterList
+  }
+
+  function addCharacter(name: string, initiativeRoll: number) {
+    if (name !== '' && initiativeRoll) {
+      const isNewCharacterActive = characters.length === 0
+      const newCharacter = { name: name, initiativeRoll: initiativeRoll, isCharacterActive: isNewCharacterActive }
+      const newCharacterList = [...characters, newCharacter]
+      setCharacters(sortCharacterList(newCharacterList))
+    }
   }
 
   function findNextValidIndexOfCharacterList(currentIndex: number, listLength: number) {
@@ -40,45 +41,24 @@ export default function TurnTrackerMainComponent() {
     setCharacters(newCharacterList)
   }
 
-  function sortCharacterList() {
-    const sortedCharacterList = [...characters]
-    sortedCharacterList.sort((charA, charB) => charB.initiativeRoll - charA.initiativeRoll)
-    setCharacters(sortedCharacterList)
-  }
-
-  function updateCharacter(index: number, updatedCharacter: Character) {
+  function deleteCharacter(index: number) {
     let updatedCharacters = [...characters]
-    updatedCharacters[index] = updatedCharacter
+    const deletedCharacter = updatedCharacters[index]
+    if (deletedCharacter.isCharacterActive) {
+      moveActiveCharacterToken(true)
+    }
+    updatedCharacters.splice(index, 1)
     setCharacters(updatedCharacters)
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 w-5/6">
-      <div className=" w-full flex gap-2">
-        <button
-          className="bg-green-600 hover:bg-green-400 active:bg-green-800 w-full rounded-sm p-2 text-center text-white shadow"
-          onClick={sortCharacterList}
-        >
-          Sort
-        </button>
-        <CharacterCreationButton onClick={pushNewCharacter} />
-        <button
-          className="bg-green-600 hover:bg-green-400 active:bg-green-800 w-full rounded-sm p-2 text-center text-white shadow"
-          onClick={() => setIsListEditable(!isListEditable)}
-        >
-          {isListEditable ? 'Save Edits' : 'Edit Characters'}
-        </button>
-      </div>
-      <TurnOrderListComponent
-        characters={characters}
-        isListEditable={isListEditable}
-        onCharacterUpdate={updateCharacter}
-      />
+    <div className="flex flex-col items-center gap-3 w-5/6 h-4/6">
       <TrackerControlComponent
-        disabled={characters.length === 0}
         onNext={() => moveActiveCharacterToken(true)}
         onBack={() => moveActiveCharacterToken(false)}
+        onAdd={addCharacter}
       />
+      <TurnOrderListComponent characters={characters} onCharacterDelete={deleteCharacter} />
     </div>
   )
 }
